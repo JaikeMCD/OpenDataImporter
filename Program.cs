@@ -9,6 +9,12 @@ namespace Mcd.OpenData
     {
         [Option('i', "input", Required = true, HelpText = "Config file.")]
         public string InputFile { get; set; }
+
+        [Option('d', "dry-run", HelpText = "Perform import without updating.")]
+        public bool DryRun { get; set; }
+
+        [Option('f', "force", HelpText = "Force update to current resource revision.")]
+        public bool Force { get; set; }
     }
 
     class Program

@@ -37,7 +37,7 @@ namespace Mcd.OpenData
 
             // Get Resource from CKAN.
 
-            Console.WriteLine("Getting CKAN resource info: {0} {1}", source.BaseAddress, source.ResourceId);
+            Console.WriteLine("Getting CKAN resource {0} from {1}", source.ResourceId, source.BaseAddress);
 
             ckan = new CKAN.Client(source.BaseAddress);
 
@@ -48,9 +48,24 @@ namespace Mcd.OpenData
                 throw new Exception("Error retrieving CKAN resource info.");
             }
 
+            // Check resource revision.
+
+            bool current = resource.result.revision_id == source.RevisionId;
+            bool update = !current || Options.Force;
+
+            if (current)
+                Console.WriteLine("Last import matches current revision {0}.", source.RevisionId);
+
+            if (Options.Force)
+                Console.WriteLine("Forcing update.}", resource.result.revision_id);
+
+            if (update)
+                Console.WriteLine("Updating to revision {0}", resource.result.revision_id);
+
             // Update data source
 
-            source.Update(Options.InputFile, resource);
+            if (!Options.DryRun)
+                source.Update(Options.InputFile, resource);
         }
     }
 }
