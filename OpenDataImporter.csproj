@@ -24,6 +24,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="FileHelpers" Version="3.2.7" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CKAN\" />

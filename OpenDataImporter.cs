@@ -61,6 +61,10 @@ namespace Mcd.OpenData
 
             if (update)
                 Console.WriteLine("Updating to revision {0}", resource.result.revision_id);
+            else
+                return;
+
+            // Perform Import
 
             // Update data source
 
