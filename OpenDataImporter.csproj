@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>-i centrelink.json</StartArguments>
+    <StartWorkingDirectory>..\test</StartWorkingDirectory>
+    <ExternalConsole>true</ExternalConsole>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Centrelink' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>-i centrelink.json</StartArguments>
+    <StartWorkingDirectory>..\test</StartWorkingDirectory>
+    <ExternalConsole>true</ExternalConsole>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="CommandLineParser" Version="2.2.1" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CKAN\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="CKANClient.cs" />
+    <Compile Remove="DataSetImporter.cs" />
+  </ItemGroup>
+</Project>
