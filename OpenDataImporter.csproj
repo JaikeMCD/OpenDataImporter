@@ -34,5 +34,6 @@
     <Compile Remove="CKANClient.cs" />
     <Compile Remove="DataSetImporter.cs" />
     <Compile Remove="FileDownloader.cs" />
+    <Compile Remove="CKAN\Model.cs" />
   </ItemGroup>
 </Project>
