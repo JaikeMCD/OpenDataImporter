@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CsvHelper;
 
 namespace Mcd.OpenData
@@ -10,21 +11,21 @@ namespace Mcd.OpenData
     {
         public List<dynamic> Records { get; set; }
 
-        public static CsvImporter OpenCsv(string path)
+        public CsvImporter()
         {
-            CsvImporter importer = new CsvImporter();
-            importer.Open(path);
-            return importer;
         }
 
-        public void Open(string path)
+        public static CsvImporter Import(StreamReader reader)
         {
-            using (var reader = File.OpenText(path))
+            var importer = new CsvImporter();
+
             using (var csv = new CsvReader(reader))
             {
                 csv.Configuration.PrepareHeaderForMatch = header => header.Replace(" ", "_");
-                Records = csv.GetRecords<dynamic>().ToList();
+                importer.Records = csv.GetRecords<dynamic>().ToList();
             }
+
+            return importer;
         }
     }
 }

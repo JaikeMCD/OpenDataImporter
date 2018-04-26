@@ -67,7 +67,16 @@ namespace Mcd.OpenData
             // Perform Import
 
             if (update && resource.result.url != null)
-                await WebUtils.DownloadAsync(resource.result.url);
+            {
+                Console.WriteLine("Downloading resource {0}", resource.result.url);
+
+                var stream = await WebUtils.DownloadStreamAsync(resource.result.url);
+
+                Console.WriteLine("Importing from CSV");
+
+                var csv = CsvImporter.Import(stream);
+
+            }
 
             // Update data source
 
