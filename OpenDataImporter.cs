@@ -57,7 +57,7 @@ namespace Mcd.OpenData
                 Console.WriteLine("Last import matches current revision {0}.", source.RevisionId);
 
             if (Options.Force)
-                Console.WriteLine("Forcing update.}", resource.result.revision_id);
+                Console.WriteLine("Forcing update.");
 
             if (update)
                 Console.WriteLine("Updating to revision {0}", resource.result.revision_id);
@@ -65,6 +65,9 @@ namespace Mcd.OpenData
                 return;
 
             // Perform Import
+
+            if (update && resource.result.url != null)
+                await WebUtils.DownloadAsync(resource.result.url);
 
             // Update data source
 
