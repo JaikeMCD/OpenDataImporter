@@ -12,6 +12,7 @@ namespace Mcd.OpenData.CKAN
             public Uri url { get; set; }
             public string format { get; set; }
             public DateTime last_modified { get; set; }
+            public bool datastore_active { get; set; }
         }
 
         public bool success { get; set; }
