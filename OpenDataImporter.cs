@@ -98,18 +98,11 @@ namespace Mcd.OpenData
 
         public void ConvertCsv(CsvImporter csv)
         {
-            var scriptSource = @"
-                dst.Title = src.OFFICE_TYPE;
-                dst.Location = src.SITE_NAME;
-                dst.Field1 = src.ADDRESS;
-                dst.Field2 = src.SUBURB;
-                dst.Field3 = src.STATE;
-                dst.Field4 = src.POSTCODE;
-            ";
-
             Console.WriteLine("Compiling conversion script.");
+            Console.WriteLine(source.ImportScript);
 
-            ImportScript import = ImportScript.Create(scriptSource);
+
+            ImportScript import = ImportScript.Create(source.ImportScript);
 
             var odrecords = import.ConvertRecords(csv.Records);
         }

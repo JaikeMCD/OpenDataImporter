@@ -11,6 +11,7 @@ namespace Mcd.OpenData
         public Guid RevisionId { get; set; }
         public DateTime LastRevision { get; set; }
         public DateTime LastImport { get; set; }
+        public string ImportScript { get; set; }
 
         public static OpenDataSource ReadJson(string path)
         {
