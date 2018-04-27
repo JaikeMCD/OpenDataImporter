@@ -31,7 +31,6 @@ namespace Mcd.OpenData
 
         static void HandleErrors(IEnumerable<Error> errors)
         {
-            //Console.WriteLine(errors);
         }
 
 
@@ -47,28 +46,6 @@ namespace Mcd.OpenData
             {
                 Console.WriteLine("Importer failed: {0}", e.Message);
             }
-
-            //RunAsync().GetAwaiter().GetResult();
         }
-
-        /*
-        static async Task RunAsync()
-        {
-            try
-            {
-                CKANClient ckan = new CKANClient(null);
-
-                CKANResource resource = await ckan.GetResourceAsync(null);
-
-                Console.WriteLine("success: {0}", null);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            return;
-        }
-        */
     }
 }
