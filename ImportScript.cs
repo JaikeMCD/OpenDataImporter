@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Collections.Generic;
-using System.Dynamic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace Mcd.OpenData
 {
@@ -29,34 +26,26 @@ namespace Mcd.OpenData
 
         public void CompileScriptRunner(string scriptSource)
         {
-            try
+            var refs = new List<MetadataReference>
             {
-                var refs = new List<MetadataReference>
-                {
-                    MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)
-                };
+                MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)
+            };
 
-                ScriptOptions options = ScriptOptions.Default.AddReferences(refs);
+            ScriptOptions options = ScriptOptions.Default.AddReferences(refs);
 
-                var script = CSharpScript.Create<int>(
-                    scriptSource,
-                    options: options,
-                    globalsType: typeof(Args)
-                );
+            var script = CSharpScript.Create<int>(
+                scriptSource,
+                options: options,
+                globalsType: typeof(Args)
+            );
 
-                runner = script.CreateDelegate();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Import Script: {0}", e);
-            }
+            runner = script.CreateDelegate();
         }
 
         public IEnumerable<OpenDataRecord> ConvertRecords(IEnumerable<dynamic> records)
         {
-            foreach (var r in records)
-                yield return ConvertRecord(r);
+            return records.Select<dynamic, OpenDataRecord>(r => ConvertRecord(r));
         }
 
         public OpenDataRecord ConvertRecord(dynamic record)

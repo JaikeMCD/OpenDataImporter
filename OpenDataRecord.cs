@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mcd.OpenData
+﻿namespace Mcd.OpenData
 {
     public class OpenDataRecord
     {

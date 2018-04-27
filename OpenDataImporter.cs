@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Dynamic;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mcd.OpenData
@@ -10,8 +12,15 @@ namespace Mcd.OpenData
 
         protected OpenDataSource source;
 
+        protected ImportScript importScript;
+
         protected CKAN.Client ckan;
         protected CKAN.Resource resource;
+
+        protected StreamReader downloadStream;
+
+        protected List<dynamic> sourceRecords;
+        protected List<OpenDataRecord> records;
 
         public OpenDataImporter(Options options)
         {
@@ -35,6 +44,37 @@ namespace Mcd.OpenData
 
             // Load source from config file.
 
+            LoadConfig();
+
+            // Compile import script
+
+            CompileImportScript();
+
+            // Get Resource from CKAN.
+
+            await GetCKANResource();
+
+            // Check resource revision.
+
+            if (!CheckResourceUpdate())
+                return;
+
+            // Download Resource
+
+            await DownloadResource();
+
+            // Import resource records
+
+            ImportRecords();
+
+            // Update data source
+
+            if (!Options.DryRun)
+                source.Update(Options.InputFile, resource);
+        }
+
+        public void LoadConfig()
+        {
             Console.WriteLine("Loading OpenDataSource from config: {0}", Options.InputFile);
 
             source = OpenDataSource.ReadJson(Options.InputFile);
@@ -43,22 +83,31 @@ namespace Mcd.OpenData
             {
                 throw new Exception("Error opening config file.");
             }
+        }
 
-            // Get Resource from CKAN.
+        public void CompileImportScript()
+        {
+            Console.WriteLine("Compiling conversion script.");
+            Console.WriteLine(source.ImportScript);
 
+            importScript = ImportScript.Create(source.ImportScript);
+        }
+
+        public async Task GetCKANResource()
+        {
             Console.WriteLine("Getting CKAN resource {0} from {1}", source.ResourceId, source.BaseAddress);
 
             ckan = new CKAN.Client(source.BaseAddress);
-
             resource = await ckan.GetResourceAsync(source.ResourceId);
 
             if (!resource.success)
             {
                 throw new Exception("Error retrieving CKAN resource info.");
             }
+        }
 
-            // Check resource revision.
-
+        public bool CheckResourceUpdate()
+        {
             bool current = resource.result.revision_id == source.RevisionId;
             bool update = !current || Options.Force;
 
@@ -66,45 +115,39 @@ namespace Mcd.OpenData
                 Console.WriteLine("Last import matches current revision {0}.", source.RevisionId);
 
             if (Options.Force)
-                Console.WriteLine("Forcing update.");
+                Console.WriteLine("Update forced.");
 
             if (update)
                 Console.WriteLine("Updating to revision {0}", resource.result.revision_id);
-            else
-                return;
 
-            // Perform Import
-
-            if (update && resource.result.url != null)
-            {
-                Console.WriteLine("Downloading resource {0}", resource.result.url);
-
-                var stream = await WebUtils.DownloadStreamAsync(resource.result.url);
-
-                Console.WriteLine("Importing from CSV");
-
-                var csv = CsvImporter.Import(stream);
-
-
-
-                ConvertCsv(csv);
-            }
-
-            // Update data source
-
-            if (!Options.DryRun)
-                source.Update(Options.InputFile, resource);
+            return update;
         }
 
-        public void ConvertCsv(CsvImporter csv)
+        public async Task DownloadResource()
         {
-            Console.WriteLine("Compiling conversion script.");
-            Console.WriteLine(source.ImportScript);
+            if (resource.result.url == null)
+                throw new Exception("No valid URL.");
 
+            Console.WriteLine("Downloading resource {0}", resource.result.url);
 
-            ImportScript import = ImportScript.Create(source.ImportScript);
+            downloadStream = await WebUtils.DownloadStreamAsync(resource.result.url);
+        }
 
-            var odrecords = import.ConvertRecords(csv.Records);
+        public void ImportRecords()
+        {
+            Console.WriteLine("Importing CSV records.");
+
+            var csv = CsvImporter.Import(downloadStream);
+            sourceRecords = csv.Records;
+
+            if (sourceRecords.Count == 0)
+                throw new Exception("0 records to convert.");
+
+            Console.WriteLine("Converting records via import script.");
+
+            records = importScript.ConvertRecords(sourceRecords).ToList();
+
+            Console.WriteLine("{0} records converted.", records.Count);
         }
 
         public void Scratch()
