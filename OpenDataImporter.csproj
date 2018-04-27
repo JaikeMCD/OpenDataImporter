@@ -21,7 +21,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Scratch' ">
     <StartAction>Project</StartAction>
-    <StartArguments>-i centrelink.json -s</StartArguments>
+    <StartArguments>-i centrelink.json -o centrelink-out.json -s</StartArguments>
     <StartWorkingDirectory>..\test</StartWorkingDirectory>
     <ExternalConsole>true</ExternalConsole>
     <ConsolePause>false</ConsolePause>

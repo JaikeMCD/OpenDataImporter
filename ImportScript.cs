@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -15,16 +16,22 @@ namespace Mcd.OpenData
             public OpenDataRecord dst;
         }
 
+        public string ScriptSource { get; set; }
+
         protected ScriptRunner<int> runner;
 
-        public static ImportScript Create(string scriptSource)
+        public static ImportScript Read(string path)
         {
-            ImportScript import = new ImportScript();
-            import.CompileScriptRunner(scriptSource);
-            return import;
+            string scriptSource = File.ReadAllText(path);
+            return new ImportScript(scriptSource);
         }
 
-        public void CompileScriptRunner(string scriptSource)
+        public ImportScript(string scriptSource)
+        {
+            ScriptSource = scriptSource;
+        }
+
+        public void CompileScriptRunner()
         {
             var refs = new List<MetadataReference>
             {
@@ -35,7 +42,7 @@ namespace Mcd.OpenData
             ScriptOptions options = ScriptOptions.Default.AddReferences(refs);
 
             var script = CSharpScript.Create<int>(
-                scriptSource,
+                ScriptSource,
                 options: options,
                 globalsType: typeof(Args)
             );
@@ -53,6 +60,18 @@ namespace Mcd.OpenData
             var args = new Args { src = record, dst = new OpenDataRecord() };
             var r = runner(args).GetAwaiter().GetResult();
             return args.dst;
+        }
+    }
+
+    public static class ImportUtils
+    {
+        public static string TrimAndJoin(string[] strings, char delimiter = ' ')
+        {
+            var trimmed = strings.Select(s => s.Trim())
+                                 .Where(s => !string.IsNullOrEmpty(s))
+                                 .ToArray();
+
+            return string.Join(delimiter, trimmed);
         }
     }
 }

@@ -105,10 +105,10 @@ namespace Mcd.OpenData
 
         public void CompileImportScript()
         {
-            Console.WriteLine("Compiling conversion script.");
-            Console.WriteLine(source.ImportScript);
+            Console.WriteLine("Compiling conversion script {0}", source.ImportScript);
 
-            importScript = ImportScript.Create(source.ImportScript);
+            importScript = ImportScript.Read(source.ImportScript);
+            importScript.CompileScriptRunner();
         }
 
         public async Task GetCKANResource()
@@ -187,7 +187,10 @@ namespace Mcd.OpenData
 
         public void Scratch()
         {
-            
+            var t = new string[] { "one", "two ", "", "three" };
+
+            var x = t.Select(s => s.Trim());
+            var y = x.Where(s => !String.IsNullOrEmpty(s));
         }
     }
 }
