@@ -1,4 +1,8 @@
-﻿namespace Mcd.OpenData
+﻿using System.IO;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace Mcd.OpenData
 {
     public class OpenDataRecord
     {
@@ -13,7 +17,23 @@
         public string Field7 { get; set; }
         public string Field8 { get; set; }
         public string Field9 { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitutde { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+    }
+
+    public class OpenDataOutput
+    {
+        public List<OpenDataRecord> OpenData { get; set; }
+
+        public OpenDataOutput(List<OpenDataRecord> records)
+        {
+            OpenData = records;
+        }
+
+        public void WriteJson(string path)
+        {
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(path, json);
+        }
     }
 }

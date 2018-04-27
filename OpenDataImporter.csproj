@@ -14,7 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Centrelink' ">
     <StartAction>Project</StartAction>
-    <StartArguments>-i centrelink.json -f</StartArguments>
+    <StartArguments>-i centrelink.json -o centrelink-out.json -f</StartArguments>
     <StartWorkingDirectory>..\test</StartWorkingDirectory>
     <ExternalConsole>true</ExternalConsole>
     <ConsolePause>false</ConsolePause>
@@ -22,6 +22,13 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Scratch' ">
     <StartAction>Project</StartAction>
     <StartArguments>-i centrelink.json -s</StartArguments>
+    <StartWorkingDirectory>..\test</StartWorkingDirectory>
+    <ExternalConsole>true</ExternalConsole>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Qld Public Libraries' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>-i qld-libraries.json -o qld-libraries-out.json -f</StartArguments>
     <StartWorkingDirectory>..\test</StartWorkingDirectory>
     <ExternalConsole>true</ExternalConsole>
     <ConsolePause>false</ConsolePause>

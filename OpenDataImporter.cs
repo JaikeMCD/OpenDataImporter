@@ -22,6 +22,21 @@ namespace Mcd.OpenData
         protected List<dynamic> sourceRecords;
         protected List<OpenDataRecord> records;
 
+        public static void Run(Options options)
+        {
+            try
+            {
+                var importer = new OpenDataImporter(options);
+
+                importer.ImportAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Importer failed: {0}", e.Message);
+            }
+            
+        }
+
         public OpenDataImporter(Options options)
         {
             Options = options;
@@ -67,10 +82,13 @@ namespace Mcd.OpenData
 
             ImportRecords();
 
+            // Write converted records
+
+            WriteRecords();
+
             // Update data source
 
-            if (!Options.DryRun)
-                source.Update(Options.InputFile, resource);
+            UpdateDataSource();
         }
 
         public void LoadConfig()
@@ -143,11 +161,28 @@ namespace Mcd.OpenData
             if (sourceRecords.Count == 0)
                 throw new Exception("0 records to convert.");
 
-            Console.WriteLine("Converting records via import script.");
-
             records = importScript.ConvertRecords(sourceRecords).ToList();
 
             Console.WriteLine("{0} records converted.", records.Count);
+        }
+
+        public void WriteRecords()
+        {
+            if (Options.DryRun)
+                return;
+            
+            Console.WriteLine("Writing records to {0}", Options.OutputFile);
+
+            var output = new OpenDataOutput(records);
+            output.WriteJson(Options.OutputFile);
+        }
+
+        public void UpdateDataSource()
+        {
+            if (Options.DryRun)
+                return;
+
+            source.Update(Options.InputFile, resource);
         }
 
         public void Scratch()

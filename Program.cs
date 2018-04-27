@@ -12,6 +12,9 @@ namespace Mcd.OpenData
         [Option('i', "input", Required = true, HelpText = "Config file.")]
         public string InputFile { get; set; }
 
+        [Option('o', "output", Required = true, HelpText = "Output file.")]
+        public string OutputFile { get; set; }
+
         [Option('d', "dry-run", HelpText = "Perform import without updating.")]
         public bool DryRun { get; set; }
 
@@ -24,27 +27,12 @@ namespace Mcd.OpenData
         static void Main(string[] args)
         {
             var result = Parser.Default.ParseArguments<Options>(args)
-                               .WithParsed(options => Run(options))
+                               .WithParsed(options => OpenDataImporter.Run(options))
                                .WithNotParsed(errors => HandleErrors(errors));
         }
 
         static void HandleErrors(IEnumerable<Error> errors)
         {
-        }
-
-
-        static void Run(Options options)
-        {
-            OpenDataImporter importer = new OpenDataImporter(options);
-
-            try
-            {
-                importer.Import();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Importer failed: {0}", e.Message);
-            }
         }
     }
 }

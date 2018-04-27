@@ -19,7 +19,7 @@ namespace Mcd.OpenData
 
             using (var csv = new CsvReader(reader))
             {
-                csv.Configuration.PrepareHeaderForMatch = header => header.Replace(" ", "_");
+                csv.Configuration.PrepareHeaderForMatch = header => header.Replace(" ", string.Empty);
                 importer.Records = csv.GetRecords<dynamic>().ToList();
             }
 
