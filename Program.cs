@@ -7,6 +7,9 @@ namespace Mcd.OpenData
 {
     public class Options
     {
+        [Option('s', "scratch", HelpText = "Run scratch experiment.")]
+        public bool Scratch { get; set; }
+
         [Option('i', "input", Required = true, HelpText = "Config file.")]
         public string InputFile { get; set; }
 

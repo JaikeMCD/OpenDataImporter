@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace Mcd.OpenData
@@ -24,6 +25,14 @@ namespace Mcd.OpenData
 
         public async Task ImportAsync()
         {
+            // Run scratch experiment
+
+            if (Options.Scratch)
+            {
+                Scratch();
+                return;
+            }
+
             // Load source from config file.
 
             Console.WriteLine("Loading OpenDataSource from config: {0}", Options.InputFile);
@@ -76,12 +85,38 @@ namespace Mcd.OpenData
 
                 var csv = CsvImporter.Import(stream);
 
+
+
+                ConvertCsv(csv);
             }
 
             // Update data source
 
             if (!Options.DryRun)
                 source.Update(Options.InputFile, resource);
+        }
+
+        public void ConvertCsv(CsvImporter csv)
+        {
+            var scriptSource = @"
+                dst.Title = src.OFFICE_TYPE;
+                dst.Location = src.SITE_NAME;
+                dst.Field1 = src.ADDRESS;
+                dst.Field2 = src.SUBURB;
+                dst.Field3 = src.STATE;
+                dst.Field4 = src.POSTCODE;
+            ";
+
+            Console.WriteLine("Compiling conversion script.");
+
+            ImportScript import = ImportScript.Create(scriptSource);
+
+            var odrecords = import.ConvertRecords(csv.Records);
+        }
+
+        public void Scratch()
+        {
+            
         }
     }
 }

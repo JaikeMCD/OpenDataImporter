@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
@@ -9,79 +10,60 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace Mcd.OpenData
 {
-    public class OpenDataRecord
+    public class ImportScript
     {
-        public string Title { get; set; }
-        public string Location { get; set; }
-        public string Field1 { get; set; }
-        public string Field2 { get; set; }
-        public string Field3 { get; set; }
-        public string Field4 { get; set; }
-        public string Field5 { get; set; }
-        public string Field6 { get; set; }
-        public string Field7 { get; set; }
-        public string Field8 { get; set; }
-        public string Field9 { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitutde { get; set; }
-    }
+        public class Args
+        {
+            public dynamic src;
+            public OpenDataRecord dst;
+        }
 
-    public class ImportScriptArgs
-    {
-        public dynamic src;
-        public OpenDataRecord dst;
-    }
+        protected ScriptRunner<int> runner;
 
-    public static class ImportScript
-    {
-        public static async Task Run()
+        public static ImportScript Create(string scriptSource)
+        {
+            ImportScript import = new ImportScript();
+            import.CompileScriptRunner(scriptSource);
+            return import;
+        }
+
+        public void CompileScriptRunner(string scriptSource)
         {
             try
             {
-                var scriptContent = "dst.Title = src.Title";
-
-                dynamic expando = new ExpandoObject();
-                expando.Title = "Wangaratta";
-
                 var refs = new List<MetadataReference>
                 {
                     MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
                     MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)
                 };
 
-                ScriptOptions options = ScriptOptions.Default
-                                                     .AddReferences(refs);
+                ScriptOptions options = ScriptOptions.Default.AddReferences(refs);
 
-                var script = CSharpScript.Create(
-                    scriptContent,
+                var script = CSharpScript.Create<int>(
+                    scriptSource,
                     options: options,
-                    globalsType: typeof(ImportScriptArgs)
+                    globalsType: typeof(Args)
                 );
 
-                script.Compile();
-
-                var g = new ImportScriptArgs { src = expando, dst = new OpenDataRecord() };
-
-                var r = await script.RunAsync(g);
-
-                Console.WriteLine(r.ReturnValue);
-
-
-                /*
-                ScriptRunner<int> runner = script.CreateDelegate();
-
-                for (int i = 0; i < 10; ++i)
-                {
-                    int r = await runner(new ImportScriptArgs { x = i, y = i });
-
-                    Console.WriteLine("{0} -> {1}", i, r);
-                }
-                */
+                runner = script.CreateDelegate();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Import Script: {0}", e);
             }
+        }
+
+        public IEnumerable<OpenDataRecord> ConvertRecords(IEnumerable<dynamic> records)
+        {
+            foreach (var r in records)
+                yield return ConvertRecord(r);
+        }
+
+        public OpenDataRecord ConvertRecord(dynamic record)
+        {
+            var args = new Args { src = record, dst = new OpenDataRecord() };
+            var r = runner(args).GetAwaiter().GetResult();
+            return args.dst;
         }
     }
 }
