@@ -36,7 +36,8 @@ namespace Mcd.OpenData
             var refs = new List<MetadataReference>
             {
                 MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(ImportUtils).GetTypeInfo().Assembly.Location)
             };
 
             ScriptOptions options = ScriptOptions.Default.AddReferences(refs);

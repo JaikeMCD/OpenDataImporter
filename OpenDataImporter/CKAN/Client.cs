@@ -42,6 +42,7 @@ namespace Mcd.OpenData.CKAN
             response.EnsureSuccessStatusCode();
 
             Resource resource = await response.Content.ReadAsAsync<Resource>();
+            
 
             return resource;
         }
