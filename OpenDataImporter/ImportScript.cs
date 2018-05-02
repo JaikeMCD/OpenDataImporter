@@ -66,7 +66,7 @@ namespace Mcd.OpenData
 
     public static class ImportUtils
     {
-        public static string TrimAndJoin(string[] strings, char delimiter = ' ')
+        public static string TrimAndJoin(string[] strings, string delimiter = " ")
         {
             var trimmed = strings.Select(s => s.Trim())
                                  .Where(s => !string.IsNullOrEmpty(s))

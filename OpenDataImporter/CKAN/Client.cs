@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Mcd.OpenData.CKAN
 {
@@ -35,14 +36,15 @@ namespace Mcd.OpenData.CKAN
 
         public async Task<Resource> GetResourceAsync(Guid resourceId)
         {
-            string query = String.Format("resource_show?id={0}", resourceId);
+            var query = String.Format("resource_show?id={0}", resourceId);
 
-            HttpResponseMessage response = await client.GetAsync(query);
+            var response = await client.GetAsync(query);
 
             response.EnsureSuccessStatusCode();
 
-            Resource resource = await response.Content.ReadAsAsync<Resource>();
-            
+            var result = await response.Content.ReadAsStringAsync();
+
+            var resource = JsonConvert.DeserializeObject<Resource>(result);
 
             return resource;
         }
