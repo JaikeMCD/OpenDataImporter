@@ -89,6 +89,10 @@ namespace Mcd.OpenData
             // Update data source
 
             UpdateDataSource();
+
+            // Pause
+
+            Console.ReadKey();
         }
 
         public void LoadConfig()

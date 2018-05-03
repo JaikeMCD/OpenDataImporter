@@ -37,13 +37,11 @@ namespace Mcd.OpenData.CKAN
         public async Task<Resource> GetResourceAsync(Guid resourceId)
         {
             var query = String.Format("resource_show?id={0}", resourceId);
-
             var response = await client.GetAsync(query);
 
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
-
             var resource = JsonConvert.DeserializeObject<Resource>(result);
 
             return resource;
