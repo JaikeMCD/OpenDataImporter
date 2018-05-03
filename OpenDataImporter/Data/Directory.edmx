@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DirectoryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="OpenData">
+          <Key>
+            <PropertyRef Name="ItemID" />
+          </Key>
+          <Property Name="ItemID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Dataset" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Location" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Field1" Type="varchar" MaxLength="255" />
+          <Property Name="Field2" Type="varchar" MaxLength="255" />
+          <Property Name="Field3" Type="varchar" MaxLength="255" />
+          <Property Name="Field4" Type="varchar" MaxLength="255" />
+          <Property Name="Field5" Type="varchar" MaxLength="255" />
+          <Property Name="Field6" Type="varchar" MaxLength="255" />
+          <Property Name="Field7" Type="varchar" MaxLength="255" />
+          <Property Name="Field8" Type="varchar" MaxLength="255" />
+          <Property Name="Field9" Type="varchar" MaxLength="255" />
+          <Property Name="Accessibility" Type="varchar" MaxLength="255" />
+          <Property Name="Latitude" Type="float" Nullable="false" />
+          <Property Name="Longitude" Type="float" Nullable="false" />
+          <Property Name="ItemURL" Type="varchar" MaxLength="1000" />
+          <Property Name="IconURL" Type="varchar" MaxLength="1000" />
+          <Property Name="IconAltText" Type="varchar" MaxLength="255" />
+          <Property Name="ExtraData" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="OpenDataSources">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BaseAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ResourceId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RevisionId" Type="uniqueidentifier" />
+          <Property Name="LastRevision" Type="datetime2" Precision="7" />
+          <Property Name="LastUpdate" Type="datetime2" Precision="7" />
+          <Property Name="ImportScriptPath" Type="nvarchar" MaxLength="260" />
+          <Property Name="ImportScript" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityContainer Name="DirectoryModelStoreContainer">
+          <EntitySet Name="OpenData" EntityType="Self.OpenData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OpenDataSources" EntityType="Self.OpenDataSources" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DirectoryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="OpenData">
+          <Key>
+            <PropertyRef Name="ItemID" />
+          </Key>
+          <Property Name="ItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Dataset" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Location" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Field1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field3" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field4" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field5" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field6" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field7" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field8" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Field9" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Accessibility" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="Double" Nullable="false" />
+          <Property Name="Longitude" Type="Double" Nullable="false" />
+          <Property Name="ItemURL" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="IconURL" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="IconAltText" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ExtraData" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="OpenDataSource">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BaseAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResourceId" Type="Guid" Nullable="false" />
+          <Property Name="RevisionId" Type="Guid" />
+          <Property Name="LastRevision" Type="DateTime" Precision="7" />
+          <Property Name="LastUpdate" Type="DateTime" Precision="7" />
+          <Property Name="ImportScriptPath" Type="String" MaxLength="260" FixedLength="false" Unicode="true" />
+          <Property Name="ImportScript" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="DirectoryContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="OpenDatas" EntityType="Self.OpenData" />
+          <EntitySet Name="OpenDataSources" EntityType="Self.OpenDataSource" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DirectoryModelStoreContainer" CdmEntityContainer="DirectoryContext">
+          <EntitySetMapping Name="OpenDatas">
+            <EntityTypeMapping TypeName="DirectoryModel.OpenData">
+              <MappingFragment StoreEntitySet="OpenData">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="Dataset" ColumnName="Dataset" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Field1" ColumnName="Field1" />
+                <ScalarProperty Name="Field2" ColumnName="Field2" />
+                <ScalarProperty Name="Field3" ColumnName="Field3" />
+                <ScalarProperty Name="Field4" ColumnName="Field4" />
+                <ScalarProperty Name="Field5" ColumnName="Field5" />
+                <ScalarProperty Name="Field6" ColumnName="Field6" />
+                <ScalarProperty Name="Field7" ColumnName="Field7" />
+                <ScalarProperty Name="Field8" ColumnName="Field8" />
+                <ScalarProperty Name="Field9" ColumnName="Field9" />
+                <ScalarProperty Name="Accessibility" ColumnName="Accessibility" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="ItemURL" ColumnName="ItemURL" />
+                <ScalarProperty Name="IconURL" ColumnName="IconURL" />
+                <ScalarProperty Name="IconAltText" ColumnName="IconAltText" />
+                <ScalarProperty Name="ExtraData" ColumnName="ExtraData" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OpenDataSources">
+            <EntityTypeMapping TypeName="DirectoryModel.OpenDataSource">
+              <MappingFragment StoreEntitySet="OpenDataSources">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="BaseAddress" ColumnName="BaseAddress" />
+                <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+                <ScalarProperty Name="RevisionId" ColumnName="RevisionId" />
+                <ScalarProperty Name="LastRevision" ColumnName="LastRevision" />
+                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
+                <ScalarProperty Name="ImportScriptPath" ColumnName="ImportScriptPath" />
+                <ScalarProperty Name="ImportScript" ColumnName="ImportScript" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

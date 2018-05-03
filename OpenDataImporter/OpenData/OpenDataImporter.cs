@@ -12,7 +12,7 @@ namespace Mcd.OpenData
 
         protected OpenDataSource source;
 
-        protected ImportScript importScript;
+        protected Utilities.ImportScript importScript;
 
         protected CKAN.Client ckan;
         protected CKAN.Resource resource;
@@ -49,14 +49,6 @@ namespace Mcd.OpenData
 
         public async Task ImportAsync()
         {
-            // Run scratch experiment
-
-            if (Options.Scratch)
-            {
-                Scratch();
-                return;
-            }
-
             // Load source from config file.
 
             LoadConfig();
@@ -111,7 +103,7 @@ namespace Mcd.OpenData
         {
             Console.WriteLine("Compiling conversion script {0}", source.ImportScript);
 
-            importScript = ImportScript.Read(source.ImportScript);
+            importScript = Utilities.ImportScript.Read(source.ImportScript);
             importScript.CompileScriptRunner();
         }
 

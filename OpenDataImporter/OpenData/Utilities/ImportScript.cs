@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.IO;
@@ -6,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
-namespace Mcd.OpenData
+namespace Mcd.OpenData.Utilities
 {
     public class ImportScript
     {
@@ -19,6 +20,39 @@ namespace Mcd.OpenData
         public string ScriptSource { get; set; }
 
         protected ScriptRunner<int> runner;
+
+        public static int Update(UpdateScriptOptions opts)
+        {
+            try
+            {
+                Console.WriteLine("Reading script {0}", opts.ScriptPath);
+
+                var scriptSource = File.ReadAllText(opts.ScriptPath);
+
+                //Console.WriteLine(scriptSource);
+
+                using (var directory = new Data.DirectoryContext())
+                {
+                    var source = directory.OpenDataSources.First(s => s.ID == opts.ID);
+
+                    Console.WriteLine("Saving script to OpenDataSource: '{0}'", source.Name);
+
+                    source.ImportScript = scriptSource;
+
+                    return directory.SaveChanges();
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("File not found");
+                return 1;
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine("Invalid OpenDataSource ({0})", opts.ID);
+                return 2;
+            }
+        }
 
         public static ImportScript Read(string path)
         {
